@@ -287,16 +287,21 @@ public class AddHouseholdFrm extends javax.swing.JFrame implements ActionListene
         cbxContractType.setSelectedIndex(0);
         txtPaymentTerm.setText("");
         cbxPayment.setSelectedIndex(0);
+        JOptionPane.showMessageDialog(this, "Reset thành công");
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        if(txtMeterCode.getText().isEmpty()||txtMeterIndex.getText().isEmpty()||txtHouseId.getText().isEmpty()||txtAddress.getText().isEmpty()||txtStatus.getText().isEmpty()||txtInstallDate.getText().isEmpty()||txtReadingDate.getText().isEmpty()||txtReadingIndex.getText().isEmpty()||txtStartIndex.getText().isEmpty()||txtPaymentTerm.getText().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập hết các trường");
+            return;
+        }
         m.setMeterCode(txtMeterCode.getText());
         m.setMeterIndex(Integer.parseInt(txtMeterIndex.getText()));
         h.setHouseId(txtHouseId.getText());
         h.setAddress(txtAddress.getText());
         mi.setStatus(txtStatus.getText());
         try {
-            mi.setInstallDate(sdf.parse(txtReadingDate.getText()));
+            mi.setInstallDate(sdf.parse(txtInstallDate.getText()));
             mi.setReadingDate(sdf.parse(txtReadingDate.getText()));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng ngày dd/MM/yyyy");

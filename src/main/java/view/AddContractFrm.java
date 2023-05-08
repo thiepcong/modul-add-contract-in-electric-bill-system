@@ -305,6 +305,10 @@ public class AddContractFrm extends javax.swing.JFrame implements ActionListener
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddHouseholdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddHouseholdActionPerformed
+        if(txtIdCard.getText().isEmpty() || txtAddress.getText().isEmpty()||txtEmail.getText().isEmpty()||txtFullName.getText().isEmpty()||txtTel.getText().isEmpty()||txtDuration.getText().isEmpty()||txtSignTime.getText().isEmpty()||txtContractId.getText().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Hãy điền đầy đủ chính xác thông tin trước khi thêm hộ dùng điện");
+            return;
+        }
         k.setIdCard(txtIdCard.getText());
         k.setAddress(txtAddress.getText());
         k.setEmail(txtEmail.getText());
@@ -322,33 +326,40 @@ public class AddContractFrm extends javax.swing.JFrame implements ActionListener
         c.setUser(user);
         (new AddHouseholdFrm(user,k,c,cds,hs,mis,ms)).setVisible(true);
         this.setVisible(false);
+        
     }//GEN-LAST:event_btnAddHouseholdActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        if(txtIdCard.getText()==null || txtAddress.getText()==null||txtEmail.getText()==null||txtFullName.getText()==null||txtTel.getText()==null||txtDuration.getText()==null||txtSignTime.getText()==null||txtContractId.getText()==null)
+        if(txtIdCard.getText().isEmpty() || txtAddress.getText().isEmpty()||txtEmail.getText().isEmpty()||txtFullName.getText().isEmpty()||txtTel.getText().isEmpty()||txtDuration.getText().isEmpty()||txtSignTime.getText().isEmpty()||txtContractId.getText().isEmpty()){
             JOptionPane.showMessageDialog(this, "Hãy điền đầy đủ thông tin");
-        else{
-            k.setIdCard(txtIdCard.getText());
-            k.setAddress(txtAddress.getText());
-            k.setEmail(txtEmail.getText());
-            k.setFullName(txtFullName.getText());
-            k.setNote(txtNote.getText());
-            k.setTel(txtTel.getText());
-            c.setContractID(txtContractId.getText());
-            try{
-                c.setSignTime( sdf.parse(txtSignTime.getText()));
-                c.setDuration( sdf.parse(txtDuration.getText()));
-            }catch(Exception e){
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng ngày dd/MM/yyyy");
-                System.err.println(e);
-            }
-            c.setClient(k);
-            c.setUser(user);
-            ContractDAO contractdao = new ContractDAO();
-            if(contractdao.addContract(c, k)) {
-                JOptionPane.showMessageDialog(this, "Hợp đồng đã thêm thành công");
-            }
+            return;
         }
+        if(mis.isEmpty()||ms.isEmpty()||cds.isEmpty()||hs.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng thêm ít nhất một hộ trước khi lưu hợp đồng");
+            return;
+        }
+        k.setIdCard(txtIdCard.getText());
+        k.setAddress(txtAddress.getText());
+        k.setEmail(txtEmail.getText());
+        k.setFullName(txtFullName.getText());
+        k.setNote(txtNote.getText());
+        k.setTel(txtTel.getText());
+        c.setContractID(txtContractId.getText());
+        try{
+            c.setSignTime( sdf.parse(txtSignTime.getText()));
+            c.setDuration( sdf.parse(txtDuration.getText()));
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng ngày dd/MM/yyyy");
+            System.err.println(e);
+        }
+        c.setClient(k);
+        c.setUser(user);
+        ContractDAO contractdao = new ContractDAO();
+        if(contractdao.addContract(c, k)) {
+            JOptionPane.showMessageDialog(this, "Hợp đồng đã thêm thành công");
+        }
+        (new ManagerHomeFrm(user)).setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
@@ -361,6 +372,10 @@ public class AddContractFrm extends javax.swing.JFrame implements ActionListener
         txtNote.setText("");
         txtSignTime.setText("");
         txtTel.setText("");
+        cds = new ArrayList<>();
+        hs = new ArrayList<>();
+        mis = new ArrayList<>();
+        ms = new ArrayList<>();
         String[] columnNames = {"Mã hộ", "Địa chỉ", "Mã đồng hồ", "Chỉ số", "Chỉ số khởi tạo","Ngày lắp đặt","Trạng thái","Chỉ số đọc","Ngày xem","Kiểu hợp đồng", "Hình thức thanh toán", "Hạn thanh toán"};
             String[][] value = new String[cds.size()][12];
         DefaultTableModel tableModel = new DefaultTableModel(value, columnNames) {
