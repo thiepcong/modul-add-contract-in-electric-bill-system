@@ -72,21 +72,32 @@ public class HouseholdDAO extends DAO{
         return true;
     }
     public boolean deleteHousehold(ElectricHousehold h){
-        String sqlh = "DELETE FROM tblContractDetail WHERE houseId = ?;"
-                + "DELETE FROM tblMeterInfo WHERE houseId = ?;"
-                + "DELETE FROM tblElectricHousehold WHERE houseId = ?;"
-                + "DELETE FROM tblElectricalMeter WHERE meterCode NOT IN (SELECT meterCode FROM tblMeterInfo)";
+        String sqlContractDetail = "DELETE FROM tblContractDetail WHERE houseId = ?";
+        String sqlMeterInfo = "DELETE FROM tblMeterInfo WHERE houseId = ?";
+        String sqlElectricHousehold = "DELETE FROM tblElectricHousehold WHERE houseId = ?";
+        String sqlElectricalMeter = "DELETE FROM tblElectricalMeter WHERE meterCode NOT IN (SELECT meterCode FROM tblMeterInfo)";
+
         try{
-            PreparedStatement psh = con.prepareStatement(sqlh);
-            psh.setString(1, h.getHouseId());
-            psh.setString(2, h.getHouseId());
-            psh.setString(3, h.getHouseId());
-            psh.execute();
+            PreparedStatement psContractDetail = con.prepareStatement(sqlContractDetail);
+            psContractDetail.setString(1, h.getHouseId());
+            psContractDetail.executeUpdate();
+
+            PreparedStatement psMeterInfo = con.prepareStatement(sqlMeterInfo);
+            psMeterInfo.setString(1, h.getHouseId());
+            psMeterInfo.executeUpdate();
+
+            PreparedStatement psElectricHousehold = con.prepareStatement(sqlElectricHousehold);
+            psElectricHousehold.setString(1, h.getHouseId());
+            psElectricHousehold.executeUpdate();
+
+            PreparedStatement psElectricalMeter = con.prepareStatement(sqlElectricalMeter);
+            psElectricalMeter.executeUpdate();
         }catch(Exception e){
             e.printStackTrace();
             return false;
         }       
         return true;
+
     }
     
 }
