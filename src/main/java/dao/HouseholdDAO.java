@@ -3,12 +3,14 @@ package dao;
 import static dao.DAO.con;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLIntegrityConstraintViolationException;
 import model.*;
 
 public class HouseholdDAO extends DAO{
 
     public HouseholdDAO() {
     }
+    
     public boolean addHousehold(ElectricHousehold h,ElectricalMeter m,MeterInfo mi, ContractDetail cd, ContractType t){
         String sqlh = "INSERT INTO tblElectricHousehold(houseId,address) VALUES(?,?)";
         String sqlm = "INSERT INTO tblElectricalMeter(meterCode,meterIndex) VALUES(?,?)";
@@ -65,6 +67,8 @@ public class HouseholdDAO extends DAO{
             }
             pscd.setInt(4, tt);
             pscd.execute();
+        }catch(SQLIntegrityConstraintViolationException e){
+            return false;
         }catch(Exception e){
             e.printStackTrace();
             return false;
@@ -80,18 +84,18 @@ public class HouseholdDAO extends DAO{
         try{
             PreparedStatement psContractDetail = con.prepareStatement(sqlContractDetail);
             psContractDetail.setString(1, h.getHouseId());
-            psContractDetail.executeUpdate();
+            psContractDetail.execute();
 
             PreparedStatement psMeterInfo = con.prepareStatement(sqlMeterInfo);
             psMeterInfo.setString(1, h.getHouseId());
-            psMeterInfo.executeUpdate();
+            psMeterInfo.execute();
 
             PreparedStatement psElectricHousehold = con.prepareStatement(sqlElectricHousehold);
             psElectricHousehold.setString(1, h.getHouseId());
-            psElectricHousehold.executeUpdate();
+            psElectricHousehold.execute();
 
             PreparedStatement psElectricalMeter = con.prepareStatement(sqlElectricalMeter);
-            psElectricalMeter.executeUpdate();
+            psElectricalMeter.execute();
         }catch(Exception e){
             e.printStackTrace();
             return false;

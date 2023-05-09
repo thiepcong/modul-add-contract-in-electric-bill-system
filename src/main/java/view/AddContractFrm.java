@@ -351,18 +351,34 @@ public class AddContractFrm extends javax.swing.JFrame implements ActionListener
         }catch(Exception e){
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng ngày dd/MM/yyyy");
             System.err.println(e);
+            return;
         }
         c.setClient(k);
         c.setUser(user);
         ContractDAO contractdao = new ContractDAO();
         if(contractdao.addContract(c, k)) {
             JOptionPane.showMessageDialog(this, "Hợp đồng đã thêm thành công");
+        }else{
+            JOptionPane.showMessageDialog(this, "Hợp đồng đã tồn tại");
+            return;
         }
         (new ManagerHomeFrm(user)).setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        boolean kt=false;
+        HouseholdDAO hdao = new HouseholdDAO();
+        if(hs.size()!=0){
+            for(ElectricHousehold i:hs)
+                if(hdao.deleteHousehold(i))kt=true;
+            
+        }
+        if(kt) JOptionPane.showMessageDialog(this, "Reset thành công"); 
+        else {
+            JOptionPane.showMessageDialog(this, "Reset không thành công"); 
+            return;
+        }
         txtAddress.setText("");
         txtContractId.setText("");
         txtDuration.setText("");
@@ -386,14 +402,7 @@ public class AddContractFrm extends javax.swing.JFrame implements ActionListener
             }
         };
         tblElectricHousehold.setModel(tableModel);
-        boolean kt=false;
-        HouseholdDAO hdao = new HouseholdDAO();
-        if(hs.size()!=0){
-            for(ElectricHousehold i:hs)
-                if(hdao.deleteHousehold(i))kt=true;
-            
-        }
-        if(kt) JOptionPane.showMessageDialog(this, "Reset thành công"); 
+        
     }//GEN-LAST:event_btnResetActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed

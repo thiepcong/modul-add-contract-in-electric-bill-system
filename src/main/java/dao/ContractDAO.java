@@ -7,6 +7,7 @@ package dao;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.text.SimpleDateFormat;
 import model.Client;
 import model.Contract;
@@ -45,6 +46,8 @@ public class ContractDAO extends DAO{
             psc.execute();
            
             
+        }catch(SQLIntegrityConstraintViolationException e){
+            return false;
         }catch(Exception e){
             e.printStackTrace();
             return false;

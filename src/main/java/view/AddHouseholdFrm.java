@@ -296,7 +296,6 @@ public class AddHouseholdFrm extends javax.swing.JFrame implements ActionListene
             return;
         }
         m.setMeterCode(txtMeterCode.getText());
-        m.setMeterIndex(Integer.parseInt(txtMeterIndex.getText()));
         h.setHouseId(txtHouseId.getText());
         h.setAddress(txtAddress.getText());
         mi.setStatus(txtStatus.getText());
@@ -306,9 +305,17 @@ public class AddHouseholdFrm extends javax.swing.JFrame implements ActionListene
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng ngày dd/MM/yyyy");
             System.err.println(ex);
+            return;
         }
-        mi.setStartIndex(Integer.parseInt(txtStartIndex.getText()));
-        mi.setReadingIndex(Integer.parseInt(txtReadingIndex.getText()));
+        try{
+            m.setMeterIndex(Integer.parseInt(txtMeterIndex.getText()));
+            mi.setStartIndex(Integer.parseInt(txtStartIndex.getText()));
+            mi.setReadingIndex(Integer.parseInt(txtReadingIndex.getText()));
+        }catch( Exception e){
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số");
+            System.err.println(e);
+            return;
+        }
         mi.setH(h);mi.setM(m);
         t.setType(cbxContractType.getSelectedItem().toString());
         cd.setPayment(cbxPayment.getSelectedItem().toString());
@@ -317,6 +324,9 @@ public class AddHouseholdFrm extends javax.swing.JFrame implements ActionListene
         HouseholdDAO hdd = new HouseholdDAO();
         if(hdd.addHousehold(h,m,mi,cd,t)) {
                 JOptionPane.showMessageDialog(this, "Hộ đã thêm thành công");
+        }else{
+            JOptionPane.showMessageDialog(this, "Hộ hoặc Đồng hồ đã tồn tại");
+            return;
         }
         mis.add(mi);cds.add(cd);ms.add(m);hs.add(h);
         (new AddContractFrm(user,k,c,cds,hs,mis,ms)).setVisible(true);
